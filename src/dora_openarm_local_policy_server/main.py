@@ -45,7 +45,6 @@ def _main_dora(io, shared_dir):
                 previous_observation_id is None
                 or observation_id < previous_observation_id
             )
-            print(f"Observation id: {observation_id}, reset: {reset}")
             previous_observation_id = observation_id
             data_file = tempfile.NamedTemporaryFile(
                 suffix=".arrow", dir=shared_dir, delete_on_close=False
