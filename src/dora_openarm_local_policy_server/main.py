@@ -50,9 +50,6 @@ def _main_dora(io, shared_dir):
                 suffix=".arrow", dir=shared_dir, delete_on_close=False
             )
             record_batch = pa.RecordBatch.from_struct_array(observation)
-            record_batch = record_batch.append_column(
-                "reset", pa.array([reset], type=pa.bool_())
-            )
             with pa.output_stream(data_file) as output:
                 with pa.ipc.new_file(output, record_batch.schema) as writer:
                     writer.write(record_batch)
@@ -62,11 +59,13 @@ def _main_dora(io, shared_dir):
             return reset, {
                 "name": "inference",
                 "data_path": data_file.name,
+                "reset": reset,
                 "metadata": event["metadata"],
             }
 
         # dora-rs node -> Policy server: Inference request
-        #   {"name": "inference", "data_path": "/data/path.arrow", ...}
+        #   {"name": "inference", "data_path": "/data/path.arrow",
+        #    "reset": true/false, ...}
         #
         # "/data/path.arrow" has a record batch:
         #   {
