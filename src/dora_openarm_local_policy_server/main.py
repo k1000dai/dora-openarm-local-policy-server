@@ -37,7 +37,7 @@ def _main_dora(io, shared_dir):
         def prepare_request():
             nonlocal previous_observation_id
             observation = event["value"]
-            observation_id = observation.field("observation_id")[0].as_py()
+            observation_id = observation.field("id")[0].as_py()
             # The observation id increments per observation and drops back to a
             # lower value when a new episode starts, so a decrease (or the very
             # first observation) signals a reset to the policy server.
